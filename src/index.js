@@ -1,5 +1,8 @@
 import express from "express";
 import cors from "cors";
+import bodyParser from "body-parser";
+
+import compression from "compression";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -20,17 +23,17 @@ const corsOptions = {
     if (allowedOrigins.includes(origin) || !origin) {
       callback(null, true); 
     } else {
-      callback(new Error('Not allowed by CORS')); 
+      callback(new Error('Not allowed by CORS'));
     }
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization','Accept'],
   credentials: true,
-  SameSite: "none",
 };
+app.use(compression());
+app.use(bodyParser.json());
 app.use(cors(corsOptions));
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+
 
 app.get("/", (req, res) => {
   res.send("Hello from the backend!");
@@ -42,7 +45,7 @@ app.get("/api/place-details", getPlaceDetails);
 app.get("/api/geocode", geocodeAddress);
 app.post("/api/restaurants", getAllRestaurants);
 
-app.options('*', cors(corsOptions));
+app.options('/*path', cors(corsOptions));
 
 
 
