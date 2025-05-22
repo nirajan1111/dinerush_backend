@@ -13,8 +13,22 @@ import {
 
 const app = express();
 
+const allowedOrigins = ['http://localhost:8000', 'https://dinerush.food', 'http://localhost:3000'];
 
-app.use(cors());
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true); 
+    } else {
+      callback(new Error('Not allowed by CORS')); 
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization','Accept'],
+  credentials: true,
+  SameSite: "none",
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
@@ -27,5 +41,9 @@ app.get("/api/search", getPlaceSuggestions);
 app.get("/api/place-details", getPlaceDetails);
 app.get("/api/geocode", geocodeAddress);
 app.post("/api/restaurants", getAllRestaurants);
+
+app.options('*', cors(corsOptions));
+
+
 
 export default app;
