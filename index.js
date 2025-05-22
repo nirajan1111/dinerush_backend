@@ -1,5 +1,8 @@
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
+dotenv.config();
+
 import {
   getPlaces,
   getPlaceSuggestions,
@@ -7,8 +10,6 @@ import {
   geocodeAddress,
   getAllRestaurants,
 } from "./controllers/places.controllers.js";
-
-
 
 const app = express();
 
